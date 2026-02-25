@@ -16,7 +16,7 @@ class MytestEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(private $token)
     {
         //
     }
@@ -38,6 +38,7 @@ class MytestEmail extends Mailable
     {
         return new Content(
             view: 'email.test',
+            with: ['token' => $this->token]
         );
     }
 

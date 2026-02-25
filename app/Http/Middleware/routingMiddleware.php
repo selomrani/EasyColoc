@@ -18,9 +18,11 @@ class routingMiddleware
     {
         if (Auth::check()) {
             $userRole = Auth::user()->role->name;
+
             if ($userRole == "admin" && !$request->is('admin*')) {
                 return redirect('/admin');
             }
+
             if ($userRole !== "admin" && !$request->is('dashboard')) {
                 return redirect('/dashboard');
             }
