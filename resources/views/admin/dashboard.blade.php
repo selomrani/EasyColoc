@@ -92,7 +92,7 @@
                     </div>
                     <div class="ml-4">
                         <h2 class="text-sm font-medium text-slate-500">Total Users</h2>
-                        <p class="text-2xl font-bold text-slate-800">1,248</p>
+                        <p class="text-2xl font-bold text-slate-800">{{ $usersCount }}</p>
                     </div>
                 </div>
 
@@ -142,7 +142,6 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200 text-slate-700">
-
                             @foreach ($users as $user)
                                 <tr class="hover:bg-slate-50 transition-colors">
                                     <td class="px-6 py-4 flex items-center">
@@ -164,7 +163,8 @@
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-{{ $color = $user->is_active ? 'red' : 'green' }}-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150">
+                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-{{ $color = $user->is_active ? 'red' : 'green' }}-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150"
+>
                                                 <i class="fa-solid fa-ban text-red-600 mr-2"></i>
                                                 {{ $status = $user->is_active ? 'ban user' : 'unban user' }}
                                             </button>

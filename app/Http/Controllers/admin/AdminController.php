@@ -13,7 +13,12 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('users'));
     }
     public function ban(User $user){
-        $user->is_active = false;
+        if($user->is_active == true){
+            $user->is_active = false;
+        }
+        else{
+            $user->is_active = true;
+        }
         $user->update();
         return back();
     }
