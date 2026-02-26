@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\accountStatusMiddleware;
 use App\Http\Middleware\permissonMiddleware;
 use App\Http\Middleware\routingMiddleware;
 use Illuminate\Foundation\Application;
@@ -14,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['routing' => routingMiddleware::class,
-        'permission' => permissonMiddleware::class]);
+        'permission' => permissonMiddleware::class,
+        'ban' => accountStatusMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
