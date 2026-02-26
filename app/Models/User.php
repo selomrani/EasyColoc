@@ -49,7 +49,14 @@ class User extends Authenticatable
         ];
     }
     public function role()
-{
-    return $this->belongsTo(Role::class);
-}
+    {
+        return $this->belongsTo(Role::class);
+    }
+    // app/Models/User.php
+
+    public function isAdmin(): bool
+    {
+        // Ensure the relationship is loaded and check the name
+        return $this->role && $this->role->name === 'admin';
+    }
 }
