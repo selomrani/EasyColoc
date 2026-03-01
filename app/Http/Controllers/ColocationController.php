@@ -39,4 +39,8 @@ class ColocationController extends Controller
         ]);
         return redirect()->route('dashboard')->with('status', 'Colocation créée avec succès !');
     }
+    public function destroy(Colocation $colocation){
+        $colocation->delete();
+        return redirect()->route('dashboard');
+    }
 }

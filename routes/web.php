@@ -43,3 +43,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/colocations/create', [ColocationController::class, 'create'])->name('colocations.create');
     Route::post('/colocations', [ColocationController::class, 'store'])->name('colocations.store');
 });
+Route::post('/colocations/{colocation}/invite', [ColocationController::class, 'invite'])->name('colocations.invite');
+Route::delete('colocations/{colocation}', [ColocationController::class,'destroy'])->name('colocations.cancel');
