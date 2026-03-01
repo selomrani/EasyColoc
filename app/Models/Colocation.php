@@ -30,4 +30,8 @@ class Colocation extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function isOwner($userId)
+    {
+        return $this->created_by === $userId;
+    }
 }

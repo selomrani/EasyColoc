@@ -17,10 +17,6 @@ class DashboardController extends Controller
             'activeColocation' => $usercoloc
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //

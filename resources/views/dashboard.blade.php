@@ -26,9 +26,7 @@
             @endif
 
             @if(!auth()->user()->hasActiveColocation())
-                <div>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Vue : Sans colocation</h3>
-                    
+                <div>                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
                         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -87,13 +85,10 @@
 
             @else
                 <div class="mt-12">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Vue : Colocation active</h3>
-                    
-                    {{-- En-tête de la colocation --}}
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                         <div class="p-6 flex flex-col md:flex-row justify-between items-start md:items-center">
                             <div>
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $activeColocation->name ?? 'Appartement Centre-Ville' }}</h3>
+                                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $colocation->name}}</h3>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Votre rôle : <span class="font-semibold text-indigo-600 dark:text-indigo-400">Owner</span>
                                 </p>

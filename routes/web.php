@@ -19,14 +19,16 @@ Route::get('/admin', function () {
     $banned = User::where('is_active','=','false')->count();
     $usersCount = User::where('role_id','=','2')->count();
     return view('admin.dashboard', compact('users','usersCount','banned'));
-})->middleware(['auth', 'verified', 'permission', 'ban'])->name('dashboard');
+})->middleware(['auth', 'verified', 'permission', 'ban'])->name('admin.dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::view('dashboard','dashboard');
+Route::get('/dashboard', [ColocationController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 require __DIR__ . '/auth.php';
 Route::get('/email', function () {
     // $token = Auth::user()->first_name;

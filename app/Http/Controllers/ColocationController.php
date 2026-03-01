@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ColocationController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $colocation = $user->colocations()
+            ->wherePivot('left_at', null)
+            ->with('owner')
+            ->first();
+        return view('dashboard', [
+            'colocation' => $colocation
+        ]);
+    }
     public function store(Request $request)
     {
         $user = Auth::user();
