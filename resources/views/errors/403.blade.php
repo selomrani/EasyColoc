@@ -1,313 +1,61 @@
-<head>
-    <link rel="stylesheet" href="{{ asset('css/403.css') }}">
-</head>
-<div class="gandalf">
-    <div class="fireball"></div>
-    <div class="skirt"></div>
-    <div class="sleeves"></div>
-    <div class="shoulders">
-        <div class="hand left"></div>
-        <div class="hand right"></div>
-    </div>
-    <div class="head">
-        <div class="hair"></div>
-        <div class="beard"></div>
-    </div>
-</div>
-<div class="message">
-    <h1>403 - You Shall Not Pass</h1>
-    <p>Uh oh, Gandalf is blocking the way!<br />Maybe you have a typo in the url? Or you meant to go to a different
-        location? Like...Hobbiton?</p>
-</div>
-<style>
-    $black: #000;
-    $semi-black: #1a2130;
-    $white: #fff;
-    $dress: #ededed;
-    $dress-dark: darken($dress, 10%);
-    $sword: #e6e6e6;
-    $staff: #bf5507;
-    $skin: #ffd8ad;
-    $hair: #c2beb5;
-    $hair-dark: darken($hair, 10%);
-    $lips: pink;
-    $fire: black, #6C1305, #DE8531, #EFAC41;
-    $fire-reverse: #EFAC41, #DE8531, #6C1305, black;
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    @keyframes floating {
-        to {
-            top: 1.5rem;
-        }
-    }
+        <title>403 - Accès Refusé | EasyColoc</title>
 
-    body {
-        background-color: $black;
-        color: $white;
-        text-align: center;
-        font-family: "Open Sans";
-        font-size: 1.3rem;
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
-        h1 {
-            font-size: 2.5rem;
-        }
-    }
+        <!-- Scripts -->
+        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+            @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @else
+            <script src="https://cdn.tailwindcss.com"></script>
+        @endif
+    </head>
+    <body class="antialiased font-sans bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center min-h-screen selection:bg-indigo-500 selection:text-white">
+        
+        <div class="max-w-xl mx-auto px-6 py-12 text-center">
+            
+            <!-- Icône de sécurité/blocage -->
+            <div class="flex justify-center mb-6">
+                <div class="p-3 bg-red-100 dark:bg-red-900/20 rounded-full">
+                    <svg class="w-12 h-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+            </div>
 
-    .message {
-        max-width: 700px;
-        margin: 5rem auto 0 auto;
-    }
+            <!-- Code et Message -->
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+                403
+            </h1>
+            <p class="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200 mb-2">
+                Accès refusé
+            </p>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+                Désolé, vous n'avez pas les autorisations nécessaires pour accéder à cette page. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur.
+            </p>
 
-    .gandalf {
-        position: relative;
-        width: 400px;
-        height: 400px;
-        margin: 0 auto;
-        top: 1rem;
-        animation: floating 1s infinite alternate ease-in-out;
+            <!-- Boutons d'action (Style Breeze natif) -->
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="{{ route('home.after403') }}" 
+                   class="inline-flex justify-center items-center px-6 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-sm text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                    Retour en arrière
+                </a>
+                
+                <a href="{{ route('dashboard') }}" 
+                   class="inline-flex justify-center items-center px-6 py-3 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-sm text-white dark:text-gray-800 hover:bg-gray-700 dark:hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    Aller au tableau de bord
+                </a>
+            </div>
 
-        div {
-            position: absolute;
-        }
+        </div>
 
-        &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 400px;
-            background-color: $semi-black;
-            border-radius: 50%;
-        }
-
-        .fireball {
-            bottom: -10px;
-            left: 50px;
-            width: 300px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient($fire-reverse);
-            border: 5px solid $black;
-        }
-
-        .skirt {
-            bottom: 50px;
-            left: 100px;
-            border-bottom: 230px solid $dress;
-            border-left: 100px solid transparent;
-            border-right: 100px solid transparent;
-            filter: drop-shadow(0 0 6px $dress-dark);
-
-            &::before {
-                content: "";
-                position: absolute;
-                background-color: $dress;
-                width: 100px;
-                height: 21px;
-                top: 230px;
-                left: 0px;
-                border-bottom-right-radius: 180%;
-                border-bottom-left-radius: 100%;
-            }
-
-            &::after {
-                content: "";
-                position: absolute;
-                background-color: $dress;
-                width: 100px;
-                height: 28px;
-                top: 230px;
-                left: -100px;
-                border-bottom-right-radius: 80%;
-                border-bottom-left-radius: 180%;
-            }
-        }
-
-        .sleeves {
-
-            &::before,
-            &::after {
-                // sleeves
-                content: "";
-                position: absolute;
-                border-bottom: 70px solid $dress;
-                filter: drop-shadow(0 0 6px $dress-dark);
-            }
-
-            &::before {
-                // sleeve left
-                top: 130px;
-                left: 191px;
-                border-left: 100px solid transparent;
-                border-right: 40px solid transparent;
-                transform: rotate(-34deg);
-            }
-
-            &::after {
-                // sleeve right
-                top: 127px;
-                left: 70px;
-                border-left: 40px solid transparent;
-                border-right: 100px solid transparent;
-                transform: rotate(41deg);
-            }
-        }
-
-        .shoulders {
-            background-color: $dress;
-            border-radius: 50%;
-            width: 100px;
-            height: 130px;
-            left: 150px;
-            top: 120px;
-
-            .hand {
-                width: 33px;
-                height: 26px;
-                border-radius: 50%;
-                background-color: $skin;
-                top: -6px;
-            }
-
-            .left {
-                left: -70px;
-                transform: rotate(-20deg);
-
-                &::after {
-                    // sword
-                    content: "";
-                    position: absolute;
-                    background-color: #e6e6e6;
-                    width: 126px;
-                    height: 8px;
-                    border-radius: 4px;
-                    transform: rotate(-105deg);
-                    transform-origin: bottom;
-                    top: -48px;
-                    left: -56px;
-                }
-            }
-
-            .right {
-                right: -70px;
-                transform: rotate(20deg);
-
-                &::after {
-                    // staff
-                    content: "";
-                    position: absolute;
-                    background-color: $staff;
-                    width: 250px;
-                    height: 5px;
-                    border-radius: 2.5px;
-                    transform: rotate(-78deg);
-                    transform-origin: left;
-                    bottom: -100px;
-                    left: 0;
-                }
-            }
-        }
-
-        .head {
-            width: 80px;
-            height: 90px;
-            top: 80px;
-            left: 160px;
-            background-color: #ffd8ad;
-            border-radius: 50%;
-
-            &::before,
-            &::after {
-                // eyes
-                content: "";
-                position: absolute;
-                background-color: $black;
-            }
-
-            &::before {
-                width: 13px;
-                height: 5px;
-                border-radius: 3px;
-                top: 42px;
-                left: 22px;
-                transform: rotate(19deg);
-            }
-
-            &::after {
-                width: 13px;
-                height: 5px;
-                border-radius: 3px;
-                top: 42px;
-                right: 22px;
-                transform: rotate(-19deg);
-            }
-
-
-            .hair {
-                width: 70px;
-                height: 30px;
-                background-color: $hair;
-                border-radius: 50%;
-                top: 0px;
-                left: 5px;
-
-                &::before,
-                &::after {
-                    // hair sides
-                    content: "";
-                    position: absolute;
-                    background-color: $hair;
-                    filter: drop-shadow(2px 5px 0 $hair-dark);
-                }
-
-                &::before {
-                    // hair left
-                    top: 13px;
-                    left: -16px;
-                    width: 25px;
-                    height: 100px;
-                    border-top-left-radius: 34px;
-                    border-top-right-radius: 15px;
-                    border-bottom-left-radius: 100px;
-                    border-bottom-right-radius: 20px;
-                    transform: rotate(8deg);
-                }
-
-                &::after {
-                    // hair right
-                    top: 13px;
-                    right: -16px;
-                    width: 25px;
-                    height: 100px;
-                    border-top-left-radius: 15px;
-                    border-top-right-radius: 34px;
-                    border-bottom-left-radius: 20px;
-                    border-bottom-right-radius: 100px;
-                    transform: rotate(-10deg);
-                }
-            }
-
-            .beard {
-                top: 64px;
-                left: 5px;
-                border-top: 80px solid $hair;
-                border-left: 35px solid transparent;
-                border-right: 35px solid transparent;
-                border-radius: 30px;
-                filter: drop-shadow(2px 5px 0 $hair-dark);
-
-                &::before {
-                    // mouth
-                    content: "";
-                    position: absolute;
-                    background-color: $lips;
-                    width: 20px;
-                    height: 5px;
-                    border-radius: 40%;
-                    top: -70px;
-                    left: -9px;
-                }
-            }
-        }
-    }
-</style>
+    </body>
+</html>

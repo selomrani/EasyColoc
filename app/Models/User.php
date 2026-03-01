@@ -22,7 +22,8 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'is_active'
     ];
 
     /**
@@ -48,7 +49,22 @@ class User extends Authenticatable
         ];
     }
     public function role()
-{
-    return $this->belongsTo(Role::class);
-}
+    {
+        return $this->belongsTo(Role::class);
+    }
+    // app/Models/User.php
+    public function hasActiveColocation()
+    {
+        return $this->colocations()->wherePivot('left_at', null)->exists();
+    }
+    public function colocations()
+    {
+        return $this->belongsToMany(Colocation::class, 'memberships')
+            ->withPivot('id', 'joined_at', 'left_at')
+            ->withTimestamps();
+    }
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
 }

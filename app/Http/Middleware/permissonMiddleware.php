@@ -18,9 +18,9 @@ class PermissonMiddleware
     {
         if (Auth::check()) {
             $userRole = Auth::user()->role->name;
-            if ($userRole != "admin_global" && $request->is(patterns: 'admin')){
+            if ($userRole !== "admin" && $request->is('admin*')) {
                 abort(403);
-            };
+            }
         }
         return $next($request);
     }

@@ -14,10 +14,8 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['name' => 'admin_global'], // Platform level
-            ['name' => 'user'],         // Platform level
-            ['name' => 'owner'],        // Colocation level (Pivot)
-            ['name' => 'member'],       // Colocation level (Pivot)
+            ['name' => 'admin'], 
+            ['name' => 'user'],               
         ];
 
         foreach ($roles as $role) {
