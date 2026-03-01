@@ -15,8 +15,16 @@
             </div>
         </div>
     </x-slot>
-
-    <div class="py-12" x-data="{ open: false, editOpen: false }">
+{{-- @dd($categories) --}}
+    {{-- Updated x-data to include Category Management states --}}
+    <div class="py-12" x-data="{ 
+        open: false, 
+        editOpen: false, 
+        catOpen: false, 
+        catCreateOpen: false, 
+        catEditOpen: false, 
+        activeCat: {id: null, name: ''} 
+    }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-12">
 
             @if (session('status'))
@@ -111,7 +119,13 @@
                                 </p>
                             </div>
                             @if ($colocation->isOwner(Auth::id()))
-                                <div class="mt-4 md:mt-0 flex space-x-3">
+                                <div class="mt-4 md:mt-0 flex flex-wrap gap-3">
+                                    {{-- New Category CRUD Trigger --}}
+                                    <button @click="catOpen = true" type="button"
+                                        class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition ease-in-out duration-150">
+                                        Gérer catégories
+                                    </button>
+
                                     <button @click="editOpen = true" type="button"
                                         class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-600 transition ease-in-out duration-150">
                                         Modifier infos
@@ -364,7 +378,7 @@
             </div>
         </div>
 
-        {{-- Modale Modifier --}}
+        {{-- Modale Modifier Colocation --}}
         <div x-show="editOpen" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center">
             <div class="fixed inset-0 bg-black opacity-50" @click="editOpen = false"></div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 z-10 w-full max-w-md">
@@ -382,6 +396,79 @@
                             class="text-gray-500 hover:underline">Annuler</button>
                         <button type="submit"
                             class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- NEW: Category Management Modal (List) --}}
+        <div x-show="catOpen" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center">
+            <div class="fixed inset-0 bg-black opacity-50" @click="catOpen = false"></div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 z-10 w-full max-w-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold dark:text-white">Gérer les catégories</h3>
+                    <button @click="catCreateOpen = true" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700">+ Ajouter</button>
+                </div>
+                <div class="max-h-60 overflow-y-auto">
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                        {{-- Standard Loop - Assumes $categories is passed to view --}}
+                        @if(isset($categories))
+                            @foreach($categories as $category)
+                            <li class="py-3 flex justify-between items-center">
+                                <span class="dark:text-gray-300">{{ $category->name }}</span>
+                                <div class="flex space-x-3">
+                                    <button @click="activeCat = {id: {{ $category->id }}, name: '{{ $category->name }}'}; catEditOpen = true" class="text-indigo-600 text-sm hover:underline">Modifier</button>
+                                    <form action="{{ route('colocation.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Supprimer cette catégorie ?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-red-600 text-sm hover:underline">Supprimer</button>
+                                    </form>
+                                </div>
+                            </li>
+                            @endforeach
+                        @else
+                            <li class="py-4 text-center text-gray-500 text-sm italic">Aucune </li>
+                        @endif
+                    </ul>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button @click="catOpen = false" class="text-gray-500 hover:underline">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        {{-- NEW: Create Category Modal --}}
+        <div x-show="catCreateOpen" style="display: none;" class="fixed inset-0 z-[60] flex items-center justify-center">
+            <div class="fixed inset-0 bg-black opacity-60" @click="catCreateOpen = false"></div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 z-[70] w-full max-w-sm">
+                <h3 class="text-md font-bold mb-4 dark:text-white">Nouvelle catégorie</h3>
+                <form action="{{ route('colocation.categories.store',$colocation) }}" method="POST">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium dark:text-gray-300 mb-1">Nom</label>
+                        <input type="text" name="name" required class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm" placeholder="Ex: Entretien">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="catCreateOpen = false" class="text-gray-500 text-sm">Annuler</button>
+                        <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-md text-sm hover:bg-emerald-700">Créer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- NEW: Edit Category Modal --}}
+        <div x-show="catEditOpen" style="display: none;" class="fixed inset-0 z-[60] flex items-center justify-center">
+            <div class="fixed inset-0 bg-black opacity-60" @click="catEditOpen = false"></div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 z-[70] w-full max-w-sm">
+                <h3 class="text-md font-bold mb-4 dark:text-white">Modifier catégorie</h3>
+                <form :action="'/categories/' + activeCat.id" method="POST">
+                    @csrf @method('PUT')
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium dark:text-gray-300 mb-1">Nom</label>
+                        <input type="text" name="name" x-model="activeCat.name" required class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="catEditOpen = false" class="text-gray-500 text-sm">Annuler</button>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700">Enregistrer</button>
                     </div>
                 </form>
             </div>

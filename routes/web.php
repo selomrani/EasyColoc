@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\ProfileController;
 use App\Mail\MytestEmail;
@@ -53,3 +54,4 @@ Route::get('/invitations/accept/{token}', [ColocationController::class, 'acceptI
     ->name('invitations.accept');
 Route::post('/invitations/join/{token}', [ColocationController::class, 'join'])
     ->name('invitations.join');
+Route::resource('colocation.categories', CategoryController::class);
