@@ -60,15 +60,45 @@ class ColocationController extends Controller
             'email' => ['required', 'email', 'string', 'max:255'],
         ]);
         $colocation = $request->user()->memberships()->whereNull('left_at')->first()->colocation;
-        $token = Str::random(12); 
+        $token = Str::random(12);
         Invitation::create([
             'colocation_id' => $colocation->id,
             'email' => $validated['email'],
             'token' => $token,
         ]);
 
-        Mail::to($validated['email'])
-            ->send(new InvitationMail($token, $colocation));
-        return back()->with('success', 'Invitation sent successfully!');
+        Mail::to($validated['email'])->send(new InvitationMail($token, $colocation));
+        return back()->with('status', 'Invitation envoyée !');
+    }
+    public function acceptInvite($token)
+    {
+        $invitation = Invitation::where('token', $token)->firstOrFail();
+        if (Auth::user()->email !== $invitation->email) {
+            abort(403, 'Cette invitation ne vous est pas destinée.');
+        }
+        return view('invitations.accept', compact('invitation'));
+    }
+    public function join($token)
+    {
+        // 1. Find the invitation by token
+        $invitation = Invitation::where('token', $token)->firstOrFail();
+
+        // 2. Security: Ensure the person clicking is the person invited
+        if (Auth::user()->email !== $invitation->email) {
+            abort(403, 'This invitation was not intended for this account.');
+        }
+
+        // 3. Attach the user to the colocation
+        // Note: Use the relationship name defined in your Colocation model (usually 'users' or 'members')
+        $invitation->colocation->members()->attach(Auth::id(), [
+            'joined_at' => now(),
+            // Add any pivot columns like 'role' => 'member' here if needed
+        ]);
+
+        // 4. Delete the invitation so it cannot be used again
+        $invitation->delete();
+
+        // 5. Redirect to dashboard with success message
+        return redirect()->route('dashboard')->with('status', 'Welcome to the colocation!');
     }
 }

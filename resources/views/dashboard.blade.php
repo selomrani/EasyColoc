@@ -128,7 +128,7 @@
                                             class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                                             Annuler la colocation
                                         </button>
-                                        </form>
+                                    </form>
                                 </div>
                             @endif
                         </div>
@@ -337,23 +337,27 @@
         </div>
 
         {{-- Modale Inviter --}}
+        @if(isset($colocation) && $colocation)
         <div x-show="open" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center">
             <div class="fixed inset-0 bg-black opacity-50" @click="open = false"></div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 z-10 w-full max-w-md">
                 <h3 class="text-lg font-bold mb-4 dark:text-white">Inviter un colocataire</h3>
-                <form action="#" method="POST">
+                <form action="{{ route('colocation.invite', $colocation->id) }}" method="POST">
                     @csrf
                     <div class="mb-4">
-                        <label class="block text-sm font-medium dark:text-gray-300">Email du futur membre</label>
+                        <label class="block text-sm font-medium dark:text-gray-300 text-gray-700">
+                            Email du futur membre
+                        </label>
                         <input type="email" name="email" required
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
                     <div class="flex justify-end space-x-3">
                         <button type="button" @click="open = false"
-                            class="text-gray-500 hover:underline">Annuler</button>
+                            class="text-gray-500 hover:text-gray-700 transition">Annuler</button>
                         <button type="submit"
-                            class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-                            Envoyer
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition shadow-sm">
+                            Envoyer l'invitation
                         </button>
                     </div>
                 </form>
@@ -365,7 +369,7 @@
             <div class="fixed inset-0 bg-black opacity-50" @click="editOpen = false"></div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 z-10 w-full max-w-md">
                 <h3 class="text-lg font-bold mb-4 dark:text-white">Modifier la colocation</h3>
-                <form action="{{ route('colocation.update',$colocation) }}" method="POST">
+                <form action="{{ route('colocation.update', $colocation) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
@@ -382,5 +386,6 @@
                 </form>
             </div>
         </div>
+        @endif
     </div>
 </x-app-layout>

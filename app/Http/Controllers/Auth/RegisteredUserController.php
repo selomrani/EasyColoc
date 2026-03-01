@@ -50,6 +50,6 @@
             if ($roleName === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
-            return redirect()->route('dashboard.user');
+            return redirect()->route('dashboard');
         }
     }

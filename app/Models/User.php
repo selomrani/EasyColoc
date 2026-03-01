@@ -63,4 +63,8 @@ class User extends Authenticatable
             ->withPivot('id', 'joined_at', 'left_at')
             ->withTimestamps();
     }
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
 }
