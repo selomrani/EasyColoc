@@ -16,10 +16,10 @@ class ColocationController extends Controller
     {
         $user = Auth::user();
         $colocation = $user->colocations()
-        ->wherePivot('left_at', null)
-        ->first();
+            ->wherePivot('left_at', null)
+            ->first();
         $categories = $colocation->categories()->get();
-        return view('dashboard',compact('categories','colocation'));
+        return view('dashboard', compact('categories', 'colocation'));
     }
     public function store(Request $request)
     {
@@ -46,11 +46,17 @@ class ColocationController extends Controller
         $colocation->delete();
         return redirect()->route('dashboard');
     }
-    public function update(Colocation $colocation, Request $request)
-    {;
-        $colocation->name = $request->name;
-        $colocation->save();
-        return redirect()->route('dashboard')->with('status', 'Colocation infos a ete modifié avec succès !');
+    public function update(Request $request, Colocation $colocation)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $colocation->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('dashboard')->with('status', 'Colocation modifiée avec succès !');
     }
     public function invite(Request $request)
     {
