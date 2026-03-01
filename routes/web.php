@@ -45,3 +45,4 @@ Route::middleware('auth')->group(function () {
 });
 Route::post('/colocations/{colocation}/invite', [ColocationController::class, 'invite'])->name('colocations.invite');
 Route::delete('colocations/{colocation}', [ColocationController::class,'destroy'])->name('colocations.cancel');
+Route::put('colocations/{colocation}', [ColocationController::class,'update'])->name('colocation.update');

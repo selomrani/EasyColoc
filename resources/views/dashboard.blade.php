@@ -116,7 +116,6 @@
                                         class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-600 transition ease-in-out duration-150">
                                         Modifier infos
                                     </button>
-
                                     <button @click="open = true" type="button"
                                         class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         Inviter un membre
@@ -366,7 +365,7 @@
             <div class="fixed inset-0 bg-black opacity-50" @click="editOpen = false"></div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 z-10 w-full max-w-md">
                 <h3 class="text-lg font-bold mb-4 dark:text-white">Modifier la colocation</h3>
-                <form action="#" method="POST">
+                <form action="{{ route('colocation.update',$colocation) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">

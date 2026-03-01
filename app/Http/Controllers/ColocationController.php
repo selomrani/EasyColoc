@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvitationMail;
 use App\Models\Colocation;
+use App\Models\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ColocationController extends Controller
 {
@@ -39,8 +43,32 @@ class ColocationController extends Controller
         ]);
         return redirect()->route('dashboard')->with('status', 'Colocation créée avec succès !');
     }
-    public function destroy(Colocation $colocation){
+    public function destroy(Colocation $colocation)
+    {
         $colocation->delete();
         return redirect()->route('dashboard');
+    }
+    public function update(Colocation $colocation, Request $request)
+    {;
+        $colocation->name = $request->name;
+        $colocation->save();
+        return redirect()->route('dashboard')->with('status', 'Colocation infos a ete modifié avec succès !');
+    }
+    public function invite(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'string', 'max:255'],
+        ]);
+        $colocation = $request->user()->memberships()->whereNull('left_at')->first()->colocation;
+        $token = Str::random(12); 
+        Invitation::create([
+            'colocation_id' => $colocation->id,
+            'email' => $validated['email'],
+            'token' => $token,
+        ]);
+
+        Mail::to($validated['email'])
+            ->send(new InvitationMail($token, $colocation));
+        return back()->with('success', 'Invitation sent successfully!');
     }
 }
