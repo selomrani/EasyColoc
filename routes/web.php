@@ -14,12 +14,12 @@ use Illuminate\Support\Str;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::view('/','welcome')->name('home.after403');
+Route::view('/', 'welcome')->name('home.after403');
 Route::get('/admin', function () {
-    $users = User::where('role_id','=','2')->get();
-    $banned = User::where('is_active','=','false')->count();
-    $usersCount = User::where('role_id','=','2')->count();
-    return view('admin.dashboard', compact('users','usersCount','banned'));
+    $users = User::where('role_id', '=', '2')->get();
+    $banned = User::where('is_active', '=', 'false')->count();
+    $usersCount = User::where('role_id', '=', '2')->count();
+    return view('admin.dashboard', compact('users', 'usersCount', 'banned'));
 })->middleware(['auth', 'verified', 'permission', 'ban'])->name('admin.dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -45,8 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/colocations', [ColocationController::class, 'store'])->name('colocations.store');
 });
 Route::post('/colocations/{colocation}/invite', [ColocationController::class, 'invite'])->name('colocations.invite');
-Route::delete('colocations/{colocation}', [ColocationController::class,'destroy'])->name('colocations.cancel');
-Route::put('colocations/{colocation}', [ColocationController::class,'update'])->name('colocation.update');
+Route::delete('colocations/{colocation}', [ColocationController::class, 'destroy'])->name('colocations.cancel');
+Route::put('colocations/{colocation}', [ColocationController::class, 'update'])->name('colocation.update');
 Route::post('/colocations/{colocation}/invite', [ColocationController::class, 'invite'])
     ->name('colocation.invite');
 
@@ -54,4 +54,8 @@ Route::get('/invitations/accept/{token}', [ColocationController::class, 'acceptI
     ->name('invitations.accept');
 Route::post('/invitations/join/{token}', [ColocationController::class, 'join'])
     ->name('invitations.join');
-Route::resource('colocation.categories', CategoryController::class);
+Route::middleware('auth')->group(function () {
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+});

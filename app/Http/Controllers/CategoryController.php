@@ -30,10 +30,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request, Colocation $colocation)
     {
+        $user = Auth::user();
+        $colocation = $user->colocations()
+            ->wherePivot('left_at', null)
+            ->first();
         $validated = $request->validate(['name' => ['required', 'max:255']]);
         $colocation->categories()->create($validated);
         return back()->with('status', value: 'categorie a éte crée !');
     }
+    
 
 
     // public function store(Request $request)
@@ -68,9 +73,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, Colocation $colocation)
     {
         $category->delete();
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('status', 'Catégorie supprimée !');
     }
 }

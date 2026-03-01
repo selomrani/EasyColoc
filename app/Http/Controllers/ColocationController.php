@@ -16,11 +16,10 @@ class ColocationController extends Controller
     {
         $user = Auth::user();
         $colocation = $user->colocations()
-            ->wherePivot('left_at', null)
-            ->with('owner')
-            ->first();
+        ->wherePivot('left_at', null)
+        ->first();
         $categories = $colocation->categories()->get();
-        return view('dashboard', compact('colocation', 'categories'));
+        return view('dashboard',compact('categories','colocation'));
     }
     public function store(Request $request)
     {

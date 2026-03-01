@@ -418,7 +418,7 @@
                                 <span class="dark:text-gray-300">{{ $category->name }}</span>
                                 <div class="flex space-x-3">
                                     <button @click="activeCat = {id: {{ $category->id }}, name: '{{ $category->name }}'}; catEditOpen = true" class="text-indigo-600 text-sm hover:underline">Modifier</button>
-                                    <form action="{{ route('colocation.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Supprimer cette catégorie ?')">
+                                    <form action="{{ route('categories.destroy',  $category) }}" method="POST" onsubmit="return confirm('Supprimer cette catégorie ?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="text-red-600 text-sm hover:underline">Supprimer</button>
                                     </form>
@@ -441,7 +441,7 @@
             <div class="fixed inset-0 bg-black opacity-60" @click="catCreateOpen = false"></div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 z-[70] w-full max-w-sm">
                 <h3 class="text-md font-bold mb-4 dark:text-white">Nouvelle catégorie</h3>
-                <form action="{{ route('colocation.categories.store',$colocation) }}" method="POST">
+                <form action="{{ route('categories.store',$colocation) }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label class="block text-sm font-medium dark:text-gray-300 mb-1">Nom</label>
