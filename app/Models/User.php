@@ -53,10 +53,15 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
     // app/Models/User.php
-
-    public function isAdmin(): bool
+    public function hasActiveColocation()
     {
-        // Ensure the relationship is loaded and check the name
-        return $this->role && $this->role->name === 'admin';
+        return $this->colocations()->wherePivot('left_at', null)->exists();
+    }
+    public function colocations()
+    {
+        return $this->belongsToMany(Colocation::class, 'memberships')
+            ->using(Membership::class) // <-- Ajoute cette ligne
+            ->withPivot('id', 'role_id', 'joined_at', 'left_at')
+            ->withTimestamps();
     }
 }

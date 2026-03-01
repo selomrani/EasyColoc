@@ -1,18 +1,19 @@
 <?php
 
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\ProfileController;
 use App\Mail\MytestEmail;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::view('/','welcome')->name('home.after403');
 Route::get('/admin', function () {
     $users = User::where('role_id','=','2')->get();
     $banned = User::where('is_active','=','false')->count();
@@ -36,3 +37,7 @@ Route::get('/email', function () {
 Route::view('/banned', 'errors.banned');
 Route::patch('/users/{user}/ban', [AdminController::class, 'ban'])
     ->name('users.ban');
+Route::middleware('auth')->group(function () {
+    Route::get('/colocations/create', [ColocationController::class, 'create'])->name('colocations.create');
+    Route::post('/colocations', [ColocationController::class, 'store'])->name('colocations.store');
+});

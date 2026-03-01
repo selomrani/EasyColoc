@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        $roleName = User::count() === 0 ? 'admin_global' : 'user';
+        $roleName = User::count() === 0 ? 'admin' : 'user';
         $role = Role::where('name', $roleName)->first();
         $user = User::create([
             'first_name' => $request->first_name,

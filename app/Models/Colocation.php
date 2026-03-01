@@ -12,6 +12,7 @@ class Colocation extends Model
     protected $fillable = [
         'name',
         'status',
+        'created_by'
     ];
     public function expenses()
     {
@@ -21,7 +22,12 @@ class Colocation extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'memberships')
-            ->withPivot('role', 'joined_at', 'left_at')
+            ->using(Membership::class)
+            ->withPivot('id', 'role_id', 'joined_at', 'left_at')
             ->withTimestamps();
+    }
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

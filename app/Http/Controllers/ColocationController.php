@@ -4,62 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Colocation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ColocationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Colocation $colocation)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Colocation $colocation)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Colocation $colocation)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Colocation $colocation)
-    {
-        //
+        $user = Auth::user();
+        $hasActiveColocation = $user->colocations()->wherePivot('left_at', null)->exists();
+        if ($hasActiveColocation) {
+            return back()->withErrors(['alreadyIn' => 'Vous appartenez déjà à une colocation active.']);
+        }
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+        $colocation = Colocation::create([
+            'name' => $validated['name'],
+            'status' => 'active',
+            'created_by' => $user->id
+        ]);
+        $colocation->members()->attach($user->id, [
+            'joined_at' => now(),
+        ]);
+        return redirect()->route('dashboard')->with('status', 'Colocation créée avec succès !');
     }
 }
