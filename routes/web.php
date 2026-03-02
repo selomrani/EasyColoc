@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Mail\MytestEmail;
 use App\Models\User;
@@ -61,3 +62,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
+Route::put('/payements/{due}', [PaymentController::class, 'update'])->name('paiements.update');

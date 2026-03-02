@@ -257,8 +257,9 @@
                                             <div class="flex justify-between items-center">
                                                 <span
                                                     class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ $due->amount }}</span>
-                                                <form action="#" method="POST">
+                                                <form action="{{ route('paiements.update',$due) }}" method="POST">
                                                     @csrf
+                                                    @method('PUT')
                                                     <button type="submit"
                                                         class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium">
                                                         Marquer payé

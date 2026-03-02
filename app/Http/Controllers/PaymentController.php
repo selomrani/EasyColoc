@@ -50,9 +50,12 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Payment $payment)
+    public function update(Request $request, Payment $due)
     {
-        //
+        $due->update([
+            'is_paid' => 1
+        ]);
+        return back()->with('status', value: 'paiement a éte payé');
     }
 
     /**
