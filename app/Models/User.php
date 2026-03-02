@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -66,5 +67,8 @@ class User extends Authenticatable
     public function memberships()
     {
         return $this->hasMany(Membership::class);
+    }
+    public function payments(){
+        return $this->hasMany(Payment::class,'debtor_id');
     }
 }

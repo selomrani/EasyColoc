@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Colocation;
 use App\Models\Expense;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Pest\Mutate\Mutators\Sets\ReturnSet;
@@ -39,14 +38,28 @@ class ExpenseController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'max:255'],
             'amount' => ['required', 'numeric'],
-            'category_id' => ['required', 'exists:categories,id'] 
+            'category_id' => ['required', 'exists:categories,id']
         ]);
-        $colocation->expenses()->create([
+        $expense = $colocation->expenses()->create([
             'name'        => $validated['name'],
             'amount'      => $validated['amount'],
             'category_id' => $validated['category_id'],
             'user_id'     => $user->id,
         ]);
+        $members = $colocation->members;
+        $splitAmount = $expense->amount / $members->count();
+        foreach ($members as $member) {
+            if ($member->id === $user->id) {
+                continue;
+            }
+            Payment::create([
+                'expense_id'  => $expense->id,
+                'debtor_id'   => $member->id,
+                'creditor_id' => $user->id,
+                'amount'      => $splitAmount,
+                'is_paid'     => 0, 
+            ]);
+        }
         return back()->with('status', value: 'dépense a éte crée !');
     }
 

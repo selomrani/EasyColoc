@@ -40,7 +40,6 @@ class CategoryController extends Controller
         $colocation->categories()->create([
             'name' => $validated['name'],
         ]);
-
         return back()->with('status', 'Catégorie a été créée !');
     }
     

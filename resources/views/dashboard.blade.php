@@ -246,18 +246,20 @@
                                     <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Remboursements
                                     </h4>
                                     <ul class="space-y-4">
+                                        @foreach ($duePayments as $due )
                                         <li
                                             class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
                                             <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                                <span class="font-medium text-gray-900 dark:text-gray-100">Marie</span>
+                                                <span class="font-medium text-gray-900 dark:text-gray-100">{{ Auth::user()->first_name }}</span>
                                                 doit à <span
-                                                    class="font-medium text-gray-900 dark:text-gray-100">Jean</span>
+                                                    class="font-medium text-gray-900 dark:text-gray-100">{{ $due->creditor->first_name }}</span>
                                             </div>
                                             <div class="flex justify-between items-center">
                                                 <span
-                                                    class="text-lg font-bold text-gray-900 dark:text-gray-100">$45.25</span>
-                                                <form action="#" method="POST">
+                                                    class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ $due->amount }}</span>
+                                                <form action="{{ route('paiements.update',$due) }}" method="POST">
                                                     @csrf
+                                                    @method('PUT')
                                                     <button type="submit"
                                                         class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium">
                                                         Marquer payé
@@ -265,18 +267,8 @@
                                                 </form>
                                             </div>
                                         </li>
-                                        <li
-                                            class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                                <span class="font-medium text-gray-900 dark:text-gray-100">Lucas</span>
-                                                doit à <span
-                                                    class="font-medium text-gray-900 dark:text-gray-100">Marie</span>
-                                            </div>
-                                            <div>
-                                                <span
-                                                    class="text-lg font-bold text-gray-900 dark:text-gray-100">$15.00</span>
-                                            </div>
-                                        </li>
+                                                                                    
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>

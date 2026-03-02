@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\InvitationMail;
 use App\Models\Colocation;
 use App\Models\Invitation;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -18,14 +19,15 @@ class ColocationController extends Controller
         $colocation = $user->colocations()
             ->wherePivot('left_at', null)
             ->first();
-        $expenses = $colocation->expenses;
-        $categories = $colocation?->categories;
-        $members = $colocation?->members; 
-        return view('dashboard', compact('categories', 'colocation','members','expenses'));
+        $expenses = $colocation ? $colocation->expenses : collect();
+        $categories = $colocation ? $colocation->categories : collect();
+        $members = $colocation?->members;
+        $duePayments = $user->payments()->where('is_paid', '=', 'false')->get();
+        return view('dashboard', compact('categories', 'colocation', 'members', 'expenses', 'duePayments'));
     }
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $user = Auth::user();   
         $hasActiveColocation = $user->colocations()->wherePivot('left_at', null)->exists();
         if ($hasActiveColocation) {
             return back()->withErrors(['alreadyIn' => 'Vous appartenez déjà à une colocation active.']);
@@ -57,7 +59,7 @@ class ColocationController extends Controller
         $colocation->update([
             'name' => $request->name
         ]);
-    
+
         return redirect()->route('dashboard')->with('status', 'Colocation modifiée avec succès !');
     }
     public function invite(Request $request)
