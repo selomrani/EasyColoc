@@ -184,7 +184,6 @@
                                             class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">Voir
                                             tout</a>
                                     </form>
-
                                     {{-- Liste des dépenses --}}
                                     <div class="overflow-x-auto">
                                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -246,28 +245,29 @@
                                     <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Remboursements
                                     </h4>
                                     <ul class="space-y-4">
-                                        @foreach ($duePayments as $due )
-                                        <li
-                                            class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                                <span class="font-medium text-gray-900 dark:text-gray-100">{{ Auth::user()->first_name }}</span>
-                                                doit à <span
-                                                    class="font-medium text-gray-900 dark:text-gray-100">{{ $due->creditor->first_name }}</span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span
-                                                    class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ $due->amount }}</span>
-                                                <form action="{{ route('paiements.update',$due) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit"
-                                                        class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium">
-                                                        Marquer payé
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </li>
-                                                                                    
+                                        @foreach ($duePayments as $due)
+                                            <li
+                                                class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                                                <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                                    <span
+                                                        class="font-medium text-gray-900 dark:text-gray-100">{{ Auth::user()->first_name }}</span>
+                                                    doit à <span
+                                                        class="font-medium text-gray-900 dark:text-gray-100">{{ $due->creditor->first_name ?? 'systéme'}}</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                    <span
+                                                        class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ $due->amount }}</span>
+                                                    <form action="{{ route('paiements.update', $due) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit"
+                                                            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium">
+                                                            Marquer payé
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -296,27 +296,34 @@
                                                             </span>
                                                         @endif
                                                     </div>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Rép: +5
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Rép:
+                                                        {{ $member->reputation_score }}
                                                     </p>
                                                 </div>
 
                                                 <div class="flex items-center ml-4">
                                                     @if (!$colocation->isOwner($member->id))
-                                                        <form method="POST" action="{{ route('colocation.leave') }}"
-                                                            onsubmit="return confirm('{{ __('Are you sure you want to remove this member?') }}')">
-                                                            @csrf
-                                                            @if (!$colocation->isOwner(Auth::id()) && $member->id == Auth::id())
+                                                        @if (!$colocation->isOwner(Auth::id()) && $member->id == Auth::id())
+                                                            <form method="POST"
+                                                                action="{{ route('colocation.leave') }}"
+                                                                onsubmit="return confirm('{{ __('Leave') }}')">
+                                                                @csrf
                                                                 <button type="submit"
                                                                     class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                                                                     {{ __('Quitter') }}
                                                                 </button>
-                                                            @elseif ($colocation->isOwner(Auth::id()))
+                                                            </form>
+                                                        @elseif ($colocation->isOwner(Auth::id()))
+                                                            <form method="POST"
+                                                                action="{{ route('colocation.remove',$member) }}"
+                                                                onsubmit="return confirm('{{ __('Remove') }}')">
+                                                                @csrf
                                                                 <button type="submit"
                                                                     class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                                                                     {{ __('Retirer') }}
                                                                 </button>
-                                                            @endif
-                                                        </form>
+                                                            </form>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </li>

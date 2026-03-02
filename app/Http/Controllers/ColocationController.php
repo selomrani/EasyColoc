@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\InvitationMail;
 use App\Models\Colocation;
 use App\Models\Invitation;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,12 +104,26 @@ class ColocationController extends Controller
         $user = Auth::user();
         $user->colocations()->detach();
         $duePayments = $user->payments()->where('is_paid', '=', 'false')->get();
-        if($duePayments->count() > 0){
+        if ($duePayments->count() > 0) {
             $user->decrement('reputation_score');
-        }
-        else{
+        } else {
             $user->increment('reputation_score');
         }
         return redirect()->route('dashboard')->with('status', 'Vous avez quitté la colocation.');
+    }
+    public function removeMember(User $member)
+    {
+        $owner = Auth::user();
+        $member->colocations()->detach();
+        $duePayments = $member->payments()->where('is_paid', '=', 'false')->get();
+        $totaldebt = $duePayments->sum('amount');
+        if ($duePayments->count() > 0) {
+            Payment::create([
+                'debtor_id'   => $owner->id,
+                'amount'      => $totaldebt,
+                'is_paid'     => 0,
+            ]);
+        }
+        return back()->with('status', value: 'membre a éte retiré!');
     }
 }
