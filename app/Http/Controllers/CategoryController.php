@@ -28,20 +28,20 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function store(Request $request, Colocation $colocation)
+    public function store(Request $request)
     {
         $user = Auth::user();
         $colocation = $user->colocations()
             ->wherePivot('left_at', null)
-            ->first();
-        $validated = $request->validate(['name' => ['required', 'max:255']]);
-        $colocation->expenses()->create([
-            'name'        => $validated['name'],
-            'amount'      => $validated['amount'],
-            'category_id' => $validated['category'], 
-            'user_id'     => $user->id,     
+            ->firstOrFail();
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255']
         ]);
-        return back()->with('status', value: 'categorie a éte crée !');
+        $colocation->categories()->create([
+            'name' => $validated['name'],
+        ]);
+
+        return back()->with('status', 'Catégorie a été créée !');
     }
     
 

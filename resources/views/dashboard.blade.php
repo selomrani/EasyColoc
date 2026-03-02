@@ -34,7 +34,7 @@
                 </div>
             @endif
 
-            @if (!auth()->user()->hasActiveColocation())
+            @if (!$colocation)
                 <div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -209,24 +209,26 @@
                                             </thead>
                                             <tbody
                                                 class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                                @foreach ($expenses as $expense )
-                                                <tr>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        {{ $expense->created_at }}</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                        {{ $expense->name }}</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        {{ $expense->category->name }}</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        {{ $expense->payer->first_name}} {{ $expense->payer->last_name }}</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
-                                                        {{ $expense->amount }}</td>
-                                                </tr>
+                                                @foreach ($expenses as $expense)
+                                                    <tr>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                            {{ $expense->created_at }}</td>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                            {{ $expense->name }}</td>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                            {{ $expense->category?->name ?? 'Catégorie supprimée' }}
+                                                        </td>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                            {{ $expense->payer ? $expense->payer->first_name . ' ' . $expense->payer->last_name : 'Ancien membre' }}
+                                                        </td>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
+                                                            {{ $expense->amount }}</td>
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -282,7 +284,8 @@
                             {{-- Section Membres --}}
                             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6">
-                                    <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Membres (3)
+                                    <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Membres
+                                        ({{ $members->count() }})
                                     </h4>
                                     <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                                         @foreach ($members as $member)
@@ -515,7 +518,7 @@
                                 <option value="" disabled selected>Sélectionnez une catégorie</option>
                                 @if (isset($categories))
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}" $category->name }}</option>
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 @endif
                             </select>
