@@ -209,40 +209,25 @@
                                             </thead>
                                             <tbody
                                                 class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                                @foreach ($expenses as $expense )
                                                 <tr>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        25/10/2023</td>
+                                                        {{ $expense->created_at }}</td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                        Courses Carrefour</td>
+                                                        {{ $expense->name }}</td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        Alimentation</td>
+                                                        {{ $expense->category->name }}</td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        Jean Dupont</td>
+                                                        {{ $expense->payer->first_name}} {{ $expense->payer->last_name }}</td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
-                                                        $120.50</td>
+                                                        {{ $expense->amount }}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        01/10/2023</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                        Facture Internet</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        Factures</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                        Marie Martin</td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
-                                                        $29.99</td>
-                                                </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>

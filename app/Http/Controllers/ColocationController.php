@@ -18,9 +18,10 @@ class ColocationController extends Controller
         $colocation = $user->colocations()
             ->wherePivot('left_at', null)
             ->first();
+        $expenses = $colocation->expenses;
         $categories = $colocation?->categories;
         $members = $colocation?->members; 
-        return view('dashboard', compact('categories', 'colocation','members'));
+        return view('dashboard', compact('categories', 'colocation','members','expenses'));
     }
     public function store(Request $request)
     {
