@@ -18,8 +18,9 @@ class ColocationController extends Controller
         $colocation = $user->colocations()
             ->wherePivot('left_at', null)
             ->first();
-        $categories = $colocation->categories()->get();
-        return view('dashboard', compact('categories', 'colocation'));
+        $categories = $colocation?->categories;
+        $members = $colocation?->members; 
+        return view('dashboard', compact('categories', 'colocation','members'));
     }
     public function store(Request $request)
     {
@@ -55,7 +56,7 @@ class ColocationController extends Controller
         $colocation->update([
             'name' => $request->name
         ]);
-
+    
         return redirect()->route('dashboard')->with('status', 'Colocation modifiée avec succès !');
     }
     public function invite(Request $request)
