@@ -49,12 +49,15 @@ class ExpenseController extends Controller
         $members = $colocation->members;
         $splitAmount = $expense->amount / $members->count();
         foreach ($members as $member) {
+            if ($member->id === $user->id) {
+                continue;
+            }
             Payment::create([
                 'expense_id'  => $expense->id,
-                'debtor_id'   => $member->id, 
+                'debtor_id'   => $member->id,
                 'creditor_id' => $user->id,
                 'amount'      => $splitAmount,
-                'is_paid'     => ($member->id === $expense->user_id) ? 1 : 0,
+                'is_paid'     => 0, 
             ]);
         }
         return back()->with('status', value: 'dépense a éte crée !');
