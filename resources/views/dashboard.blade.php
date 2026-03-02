@@ -9,7 +9,7 @@
                     Réputation :
                     <span
                         class="font-bold {{ auth()->user()->reputation_score >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                        {{ auth()->user()->reputation_score > 0 ? '+' : '' }}{{ auth()->user()->reputation_score ?? 0 }}
+                        {{ auth()->user()->reputation_score }}
                     </span>
                 </span>
             </div>
@@ -302,10 +302,9 @@
 
                                                 <div class="flex items-center ml-4">
                                                     @if (!$colocation->isOwner($member->id))
-                                                        <form method="POST" action="#"
+                                                        <form method="POST" action="{{ route('colocation.leave') }}"
                                                             onsubmit="return confirm('{{ __('Are you sure you want to remove this member?') }}')">
                                                             @csrf
-                                                            @method('delete')
                                                             @if (!$colocation->isOwner(Auth::id()) && $member->id == Auth::id())
                                                                 <button type="submit"
                                                                     class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">

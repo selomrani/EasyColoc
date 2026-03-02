@@ -63,3 +63,4 @@ Route::middleware('auth')->group(function () {
 });
 Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
 Route::put('/payements/{due}', [PaymentController::class, 'update'])->name('paiements.update');
+Route::post('/colocation/leave', [ColocationController::class, 'leave'])->name('colocation.leave');
