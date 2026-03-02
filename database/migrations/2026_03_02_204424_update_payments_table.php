@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->foreignId('expense_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('debtor_id')->constrained('users')->cascadeOnDelete(); 
-            $table->foreignId('creditor_id')->constrained('users')->cascadeOnDelete(); 
-            $table->decimal('amount', 8, 2);
-            $table->boolean('is_paid')->default(false);
+            $table->dropForeign(['expense_id']);
+            $table->dropForeign(['creditor_id']);
+            $table->foreignId('expense_id')->nullable()->change()->constrained()->cascadeOnDelete();
+            $table->foreignId('creditor_id')->nullable()->change()->constrained('users')->cascadeOnDelete();
         });
-    }   
+    }
 
     /**
      * Reverse the migrations.
