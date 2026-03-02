@@ -30,4 +30,5 @@ class Membership extends Pivot
     {
         return $this->belongsTo(Role::class);
     }
+    
 }
