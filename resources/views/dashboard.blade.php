@@ -9,7 +9,7 @@
                     Réputation :
                     <span
                         class="font-bold {{ auth()->user()->reputation_score >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                        {{ auth()->user()->reputation_score > 0 ? '+' : '' }}{{ auth()->user()->reputation_score ?? 0 }}
+                        {{ auth()->user()->reputation_score }}
                     </span>
                 </span>
             </div>

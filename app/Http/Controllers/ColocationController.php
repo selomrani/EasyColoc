@@ -102,6 +102,13 @@ class ColocationController extends Controller
     {
         $user = Auth::user();
         $user->colocations()->detach();
+        $duePayments = $user->payments()->where('is_paid', '=', 'false')->get();
+        if($duePayments->count() > 0){
+            $user->decrement('reputation_score');
+        }
+        else{
+            $user->increment('reputation_score');
+        }
         return redirect()->route('dashboard')->with('status', 'Vous avez quitté la colocation.');
     }
 }
