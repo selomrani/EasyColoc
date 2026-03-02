@@ -17,11 +17,9 @@ class ColocationController extends Controller
         $user = Auth::user();
         $colocation = $user->colocations()
             ->wherePivot('left_at', null)
-            ->with('owner')
             ->first();
-        return view('dashboard', [
-            'colocation' => $colocation
-        ]);
+        $categories = $colocation->categories()->get();
+        return view('dashboard', compact('categories', 'colocation'));
     }
     public function store(Request $request)
     {
@@ -48,11 +46,17 @@ class ColocationController extends Controller
         $colocation->delete();
         return redirect()->route('dashboard');
     }
-    public function update(Colocation $colocation, Request $request)
-    {;
-        $colocation->name = $request->name;
-        $colocation->save();
-        return redirect()->route('dashboard')->with('status', 'Colocation infos a ete modifié avec succès !');
+    public function update(Request $request, Colocation $colocation)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $colocation->update([
+            'name' => $request->name
+        ]);
+
+        return redirect()->route('dashboard')->with('status', 'Colocation modifiée avec succès !');
     }
     public function invite(Request $request)
     {
@@ -74,31 +78,20 @@ class ColocationController extends Controller
     {
         $invitation = Invitation::where('token', $token)->firstOrFail();
         if (Auth::user()->email !== $invitation->email) {
-            abort(403, 'Cette invitation ne vous est pas destinée.');
+            abort(403);
         }
         return view('invitations.accept', compact('invitation'));
     }
     public function join($token)
     {
-        // 1. Find the invitation by token
         $invitation = Invitation::where('token', $token)->firstOrFail();
-
-        // 2. Security: Ensure the person clicking is the person invited
         if (Auth::user()->email !== $invitation->email) {
             abort(403, 'This invitation was not intended for this account.');
         }
-
-        // 3. Attach the user to the colocation
-        // Note: Use the relationship name defined in your Colocation model (usually 'users' or 'members')
         $invitation->colocation->members()->attach(Auth::id(), [
             'joined_at' => now(),
-            // Add any pivot columns like 'role' => 'member' here if needed
         ]);
-
-        // 4. Delete the invitation so it cannot be used again
         $invitation->delete();
-
-        // 5. Redirect to dashboard with success message
         return redirect()->route('dashboard')->with('status', 'Welcome to the colocation!');
     }
 }

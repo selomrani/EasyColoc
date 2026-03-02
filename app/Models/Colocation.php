@@ -33,4 +33,7 @@ class Colocation extends Model
     {
         return $this->created_by === $userId;
     }
+    public function categories(){
+        return $this->hasMany(Category::class);
+    }
 }
