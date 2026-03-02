@@ -15,13 +15,14 @@
             </div>
         </div>
     </x-slot>
-    {{-- Updated x-data to include Category Management states --}}
+    {{-- Updated x-data to include Category Management and Expense states --}}
     <div class="py-12" x-data="{
         open: false,
         editOpen: false,
         catOpen: false,
         catCreateOpen: false,
         catEditOpen: false,
+        expenseOpen: false,
         activeCat: { id: null, name: '' }
     }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-12">
@@ -158,10 +159,10 @@
                                     class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                                     <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100">Dépenses communes
                                     </h4>
-                                    <a href="#"
+                                    <button type="button" @click="expenseOpen = true"
                                         class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                                         Ajouter
-                                    </a>
+                                    </button>
                                 </div>
 
                                 <div class="p-6">
@@ -223,7 +224,7 @@
                                                         Jean Dupont</td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
-                                                        120.50 €</td>
+                                                        $120.50</td>
                                                 </tr>
                                                 <tr>
                                                     <td
@@ -240,7 +241,7 @@
                                                         Marie Martin</td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
-                                                        29.99 €</td>
+                                                        $29.99</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -266,8 +267,8 @@
                                                     class="font-medium text-gray-900 dark:text-gray-100">Jean</span>
                                             </div>
                                             <div class="flex justify-between items-center">
-                                                <span class="text-lg font-bold text-gray-900 dark:text-gray-100">45.25
-                                                    €</span>
+                                                <span
+                                                    class="text-lg font-bold text-gray-900 dark:text-gray-100">$45.25</span>
                                                 <form action="#" method="POST">
                                                     @csrf
                                                     <button type="submit"
@@ -285,8 +286,8 @@
                                                     class="font-medium text-gray-900 dark:text-gray-100">Marie</span>
                                             </div>
                                             <div>
-                                                <span class="text-lg font-bold text-gray-900 dark:text-gray-100">15.00
-                                                    €</span>
+                                                <span
+                                                    class="text-lg font-bold text-gray-900 dark:text-gray-100">$15.00</span>
                                             </div>
                                         </li>
                                     </ul>
@@ -321,36 +322,26 @@
 
                                                 <div class="flex items-center ml-4">
                                                     @if (!$colocation->isOwner($member->id))
-                                                        <form method="POST"
-                                                            action="#"
+                                                        <form method="POST" action="#"
                                                             onsubmit="return confirm('{{ __('Are you sure you want to remove this member?') }}')">
                                                             @csrf
                                                             @method('delete')
-
-                                                            <button type="submit"
-                                                                class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                                                                {{ __('Retirer') }}
-                                                            </button>
+                                                            @if (!$colocation->isOwner(Auth::id()) && $member->id == Auth::id())
+                                                                <button type="submit"
+                                                                    class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                                                    {{ __('Quitter') }}
+                                                                </button>
+                                                            @elseif ($colocation->isOwner(Auth::id()))
+                                                                <button type="submit"
+                                                                    class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                                                    {{ __('Retirer') }}
+                                                                </button>
+                                                            @endif
                                                         </form>
                                                     @endif
                                                 </div>
                                             </li>
                                         @endforeach
-                                        {{-- <li class="py-3 flex justify-between items-center">
-                                            <div>
-                                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Marie
-                                                    Martin</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Rép: +2</p>
-                                            </div>
-                                            <form action="#" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="text-sm text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-medium">
-                                                    Retirer
-                                                </button>
-                                            </form>
-                                        </li> --}}
                                     </ul>
                                 </div>
                             </div>
@@ -498,6 +489,60 @@
                                 class="text-gray-500 text-sm">Annuler</button>
                             <button type="submit"
                                 class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- NEW: Add Expense Modal --}}
+            <div x-show="expenseOpen" style="display: none;"
+                class="fixed inset-0 z-50 flex items-center justify-center">
+                <div class="fixed inset-0 bg-black opacity-50" @click="expenseOpen = false"></div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 z-10 w-full max-w-md">
+                    <h3 class="text-lg font-bold mb-4 dark:text-white">Ajouter une dépense</h3>
+                    {{-- Replace 'expenses.store' with your actual named route --}}
+                    <form action="{{ route('expenses.store') }}" method="POST">
+                        @csrf
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium dark:text-gray-300 text-gray-700">Titre</label>
+                            <input type="text" name="name" required
+                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Ex: Facture d'électricité">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium dark:text-gray-300 text-gray-700">Montant</label>
+                            <div class="relative mt-1 rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                </div>
+                                <input type="number" name="amount" step="0.01" min="0" required
+                                    class="block w-full pl-7 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium dark:text-gray-300 text-gray-700">Catégorie</label>
+                            <select name="category_id" required
+                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="" disabled selected>Sélectionnez une catégorie</option>
+                                @if (isset($categories))
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}" $category->name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" @click="expenseOpen = false"
+                                class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition">Annuler</button>
+                            <button type="submit"
+                                class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition shadow-sm">
+                                Ajouter la dépense
+                            </button>
                         </div>
                     </form>
                 </div>

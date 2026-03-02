@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Colocation;
 use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Pest\Mutate\Mutators\Sets\ReturnSet;
 
 class ExpenseController extends Controller
 {
@@ -28,7 +32,22 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        $colocation = $user->colocations()
+            ->wherePivot('left_at', null)
+            ->first();
+        $validated = $request->validate([
+            'name' => ['required', 'max:255'],
+            'amount' => ['required', 'numeric'],
+            'category_id' => ['required', 'exists:categories,id'] 
+        ]);
+        $colocation->expenses()->create([
+            'name'        => $validated['name'],
+            'amount'      => $validated['amount'],
+            'category_id' => $validated['category_id'],
+            'user_id'     => $user->id,
+        ]);
+        return back()->with('status', value: 'dépense a éte crée !');
     }
 
     /**

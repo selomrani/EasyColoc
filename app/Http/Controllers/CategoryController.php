@@ -35,7 +35,12 @@ class CategoryController extends Controller
             ->wherePivot('left_at', null)
             ->first();
         $validated = $request->validate(['name' => ['required', 'max:255']]);
-        $colocation->categories()->create($validated);
+        $colocation->expenses()->create([
+            'name'        => $validated['name'],
+            'amount'      => $validated['amount'],
+            'category_id' => $validated['category'], 
+            'user_id'     => $user->id,     
+        ]);
         return back()->with('status', value: 'categorie a éte crée !');
     }
     
