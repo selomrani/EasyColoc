@@ -27,7 +27,7 @@ class ColocationController extends Controller
     }
     public function store(Request $request)
     {
-        $user = Auth::user();   
+        $user = Auth::user();
         $hasActiveColocation = $user->colocations()->wherePivot('left_at', null)->exists();
         if ($hasActiveColocation) {
             return back()->withErrors(['alreadyIn' => 'Vous appartenez déjà à une colocation active.']);
@@ -97,5 +97,11 @@ class ColocationController extends Controller
         ]);
         $invitation->delete();
         return redirect()->route('dashboard')->with('status', 'Welcome to the colocation!');
+    }
+    public function leave(Request $request)
+    {
+        $user = Auth::user();
+        $user->colocations()->detach();
+        return redirect()->route('dashboard')->with('status', 'Vous avez quitté la colocation.');
     }
 }
