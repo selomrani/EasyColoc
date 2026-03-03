@@ -66,6 +66,9 @@ class ExpenseController extends Controller
     /**
      * Display the specified resource.
      */
+    public function filterByMonth($month){
+        
+    }
     public function show(Expense $expense)
     {
         //
@@ -94,4 +97,5 @@ class ExpenseController extends Controller
     {
         //
     }
+    
 }
